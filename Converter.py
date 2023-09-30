@@ -1,13 +1,16 @@
-import PyPDF2
+#Предполагается вызывать Converter.main с переданным путем к .pdf из других файлов
+import tabula
+import sqlite3
+def main(file):
+    conn=sqlite3.connect('database.db')
+    cur=conn.cursor()
 
-file="files/21.09.pdf"
-with open(file, 'rb') as pdffile:
-    pdf=PyPDF2.PdfReader(pdffile)
-    page=pdf.pages[0]
-    print(page.extract_text())
+    file='files/'+file
+    table=tabula.read_pdf(file, pages=1)
+    groups=table[0]
+    print(groups)
 
-#Имею представление как делить инфу на ячейки таблицы pdf
-#И совершенно не имею понятия как раскидывать их по группам
-#
-#Хотелось бы заиметь рабочую библиотеку на питон
-#tabula/camelot/fitz выдают ошибки либо не работают
+
+main('02.10.pdf')
+#Предстоит много работы с сортировкой информации из таблиц
+#Разобраться с датафреймами pandas

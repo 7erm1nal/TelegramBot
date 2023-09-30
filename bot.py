@@ -1,4 +1,5 @@
 import asyncio
+import sqlite3
 from telebot import types
 from telebot.async_telebot import AsyncTeleBot
 
@@ -17,13 +18,20 @@ async def send_welcome(message):
 async def Menu(message):
     if (message.text =="Меню"):
         markup = types.InlineKeyboardMarkup()
-        btn_site=types.InlineKeyboardButton(text="Обо мне", url="https://github.com/7erm1naL/TelegramBot")
+        btn_site=types.InlineKeyboardButton(text="Обо мне", callback_data='About')
         btn_settings=types.InlineKeyboardButton(text="Настройки", callback_data='Settings')
         btn_subscribe=types.InlineKeyboardButton(text="Подписаться", callback_data='Subscribe')
         markup.add(btn_site, btn_settings, btn_subscribe)
         await bot.send_message(message.chat.id, text="Меню", reply_markup=markup)
     else:
         await bot.send_message(message.chat.id, "Чо говоришь? не понимаю")
+
+@bot.callback_query_handler(func=lambda call: call.data=='About')
+async def About(message):
+    markup = types.InlineKeyboardMarkup()
+    btn=types.InlineKeyboardButton(text="Мои исходники", url="https://github.com/7erm1naL/TelegramBot")
+    markup.add(btn)
+    await bot.send_message(message.from_user.id, text=f"Привет, {message.from_user.first_name}! Я создан для того, чтобы скидывать тебе расписание :)", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data=='Settings')
 async def Settings(message):

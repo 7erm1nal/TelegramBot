@@ -2,6 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import Converter
 
 #Функция определения времени
 #На вход подается реквест (год, месяц, день, час, завтра)  На выход нужная строка
@@ -12,8 +13,14 @@ def current_date(req=str):
     if req=='tomorrow':
         tomorrow=datetime.datetime.today() + datetime.timedelta(days=1)
         return tomorrow.strftime("%d") 
-    if req=='month':
-        return dt.strftime("%m")
+    if req=='month':    
+        if int(current_date('tomorrow'))<int(current_date('day')):#Если завтра следующий месяц, нужно в расчетах использовать именно его, а не текущий
+            if str(int(dt.strftime("%m"))+1)=='12':               #Во избежание 13-го месяца
+                return '1'
+            else:
+                return str(int(dt.strftime("%m"))+1)
+        else:
+            return dt.strftime("%m")
     if req=='hour':
         return dt.strftime("%H")
     if req == 'day':
@@ -46,6 +53,7 @@ def parse(url=str):
                 pdf.close()
                 os.rename(i, "files/"+i)        #Перенос в папку files
                 print("File ", i, " downloaded")
+                Converter.main(i)
                 if ',' in i:
                     weekend()                   #Если название файла имеет запятую
                                                 #значит в нем содержится расписание на пт-сб
