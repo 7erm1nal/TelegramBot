@@ -15,7 +15,7 @@ def current_date(req=str):
         return tomorrow.strftime("%d") 
     if req=='month':    
         if int(current_date('tomorrow'))<int(current_date('day')):#Если завтра следующий месяц, нужно в расчетах использовать именно его, а не текущий
-            if str(int(dt.strftime("%m"))+1)=='12':               #Во избежание 13-го месяца
+            if str(int(dt.strftime("%m")))=='12':               #Во избежание 13-го месяца
                 return '1'
             else:
                 return str(int(dt.strftime("%m"))+1)
